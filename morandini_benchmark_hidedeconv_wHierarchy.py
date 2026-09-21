@@ -45,6 +45,7 @@ r_hao = ro.r["as"](r_hao, "SingleCellExperiment")
 with localconverter(anndata2ri.converter):
     adata_hao = ro.conversion.rpy2py(r_hao)
 
+
 # Second convert the morandini counts to pandas
 print("-> Convert Morandini counts to pandas")
 r_morandini_counts = ro.r["readRDS"](data_morandini_counts)
@@ -60,10 +61,12 @@ with localconverter(pandas2ri.converter):
     index = ro.conversion.rpy2py(r_morandini_counts_rownames)
     df_morandini_counts.index = pd.Index(index)
 
+
 # Set column names
 r_morandini_counts_colnames = ro.r["colnames"](r_morandini_counts)
 with localconverter(pandas2ri.converter):
     colnames = ro.conversion.rpy2py(r_morandini_counts_colnames)
+
     df_morandini_counts.columns = pd.Index(colnames)
 
 
@@ -75,41 +78,81 @@ with localconverter(pandas2ri.converter):
 
 df_morandini_facs = pd.DataFrame(df_morandini_facs)
 
+
 # Set indexes
 r_morandini_facs_rownames = ro.r["rownames"](r_morandini_facs)
 
 with localconverter(pandas2ri.converter):
     index = ro.conversion.rpy2py(r_morandini_facs_rownames)
+
     df_morandini_facs.index = pd.Index(index)
+
 
 # Set column names
 r_morandini_facs_colnames = ro.r["colnames"](r_morandini_facs)
 with localconverter(pandas2ri.converter):
     colnames = ro.conversion.rpy2py(r_morandini_facs_colnames)
+
     df_morandini_facs.columns = pd.Index(colnames)
 
 
 ## Deconvolution Part
-# Run the deconvolution with HIDE-Deconv with standard parameters
+# Define the Morandini cell type hierarchy
+adata_hao.obs["morandini_minor"] = adata_hao.obs["cell_type"]
+
+adata_hao.obs.loc[
+    adata_hao.obs["cell_type"].isin(
+        [
+            "T cells CD4 conv",
+            "T cells CD8",
+            "Tregs",
+        ]
+    ),
+    "morandini_minor",
+] = "T cells"
+
+adata_hao.obs["morandini_major"] = adata_hao.obs["morandini_minor"]
+
+adata_hao.obs.loc[
+    adata_hao.obs["morandini_minor"].isin(
+        [
+            "T cells",
+            "B cells",
+            "ILC",
+            "NK cells",
+            "Plasma cells",
+        ]
+    ),
+    "morandini_major",
+] = "Lymphocytes"
+
+
+# Run the deconvolution with HIDE-Deconv
+
 print("-> Running Deconvolution with HIDE-Deconv")
-results = deconvolution(adata_hao, df_morandini_counts)
 
-C_est = results[0].T  # Transpose, as HIDE-deconv results have form cell_types x samples
+results = deconvolution(
+    adata_hao,
+    df_morandini_counts,
+    celltype_cols=[
+        "cell_type",
+        "morandini_minor",
+        "morandini_major",
+    ]
+)
 
-## Aggregate the results according to the computeMetricsNF.R function from deconvBench
-# Morandini specific aggregation from computeMetricsNF.R
-C_est["T cells CD4"] = C_est["T cells CD4 conv"]
-C_est["T cells"] = C_est["T cells CD4"] + C_est["T cells CD8"] + C_est["Tregs"]
 
-if "ILC" in C_est.columns:
-    C_est["Lymphocytes"] = (
-        C_est["T cells"] + C_est["B cells"] + C_est["ILC"] + C_est["NK cells"]
-    )
-else:
-    C_est["Lymphocytes"] = C_est["T cells"] + C_est["B cells"] + C_est["NK cells"]
+# HIDE-deconv results have form cell_types x samples
 
-if "Plasma cells" in C_est.columns:
-    C_est["Lymphocytes"] = C_est["Lymphocytes"] + C_est["Plasma cells"]
+C_est = results[0].T
+C_est = C_est.rename(
+    columns={
+        "T cells CD4 conv": "T cells CD4",
+    }
+)
+
+C_est["T cells"] = results[1].T["T cells"]
+C_est["Lymphocytes"] = results[2].T["Lymphocytes"]
 
 
 ## Calculate metrics according to deconvBench
@@ -149,6 +192,7 @@ y = results_df["true_frac"].to_numpy(dtype=float)
 pearson_r = pearsonr(x, y).statistic
 rmse = np.sqrt(np.mean((x - y) ** 2))
 
+
 ## Original results from deconvBench
 benchmark_results = pd.DataFrame(
     {
@@ -161,7 +205,7 @@ benchmark_results = pd.DataFrame(
             "MuSiC",
             "Scaden",
             "SCDC",
-            "HIDE-Deconv",
+            "HIDE-Deconv (w. Hierarchy)",
         ],
         "Pearson R": [
             0.819,
@@ -188,4 +232,4 @@ benchmark_results = pd.DataFrame(
     }
 )
 
-benchmark_results.to_csv("morandini_results.csv", index=False)
+benchmark_results.to_csv("morandini_results_wHierarchy.csv", index=False)
