@@ -4,8 +4,8 @@ This repository contains reproducible scripts for additional benchmarks for the 
 
 **[HIDE-Deconv](https://github.com/dvoelkl/HIDE-deconv)**
 
-## Benchmarks on simulated bulks (HIDE-Deconv v0.1.10)
-For information on how the benchmarks on simulated lung adenocarcinoma bulks were performed, we refer to the preprint:
+## Benchmarks on simulated bulks (HIDE-Deconv v0.1.0)
+For information on how the benchmarks on simulated lung adenocarcinoma bulks where performed, we refer to the preprint: 
 
 HIDE-Deconv: A hierarchical deconvolution framework for multiscale characterization of cellular remodeling
 
