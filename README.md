@@ -4,12 +4,12 @@ This repository contains reproducible scripts for additional benchmarks for the 
 
 **[HIDE-Deconv](https://github.com/dvoelkl/HIDE-deconv)**
 
-## Benchmarks on simulated bulks (HIDE-Deconv v0.1.0)
+## Benchmarks on simulated bulks (HIDE-Deconv v0.1.10)
 For information on how the benchmarks on simulated lung adenocarcinoma bulks where performed, we refer to the preprint: 
 
 HIDE-Deconv: A hierarchical deconvolution framework for multiscale characterization of cellular remodeling
 
-Dennis Voelkl, Sarah Bolz, Austin Rayford, Thomas Stevenson, Thomas Sterr, Malte Mensching-Buhr, Nicole Seifert, Julia Arp, Cornelia Schuster, Jana Tausche, Laurenz Engel, Helena U. Zacharias, Michael Altenbuchinger, Franziska Görter bioRxiv 2026.08.24.746754; doi: https://doi.org/10.64898/2026.08.24.746754
+Dennis Voelkl, Sarah Bolz, Austin Rayford, Thomas Stevenson, Thomas Sterr, Malte Mensching-Buhr, Nicole Seifert, Julia Arp, Cornelia Schuster, Jana Tausche, Laurenz Engel, Helena U. Zacharias, Michael Altenbuchinger, Franziska Görtler bioRxiv 2026.08.24.746754; doi: https://doi.org/10.64898/2026.08.24.746754
 
 ## Benchmarks on real world data: Morandini (HIDE-Deconv v0.4.0)
 As an additional evaluation on real world data after posting the preprint, HIDE-deconv was benchmarked on the Morandini bulk RNA-seq dataset using the HaoSub single-cell reference, following the evaluation procedure of the `deconvBench` framework from Dietrich et al. (2026).
