@@ -21,14 +21,15 @@ The benchmark was performed with two versions of HIDE-Deconv:
 
 | Method          | Pearson R   |    RMSE   |
 | --------------- | ----------: | --------: |
-| AutoGeneS       |       0.819 |     0.182 |
-| BayesPrism      |       0.254 |     0.295 |
-| Bisque          |       0.872 |     0.122 |
-| CIBERSORTx      |       0.648 |     0.193 |
-| DWLS            |       0.909 |     0.103 |
-| MuSiC           |       0.319 |     0.275 |
-| Scaden          |       0.795 |     0.150 |
-| SCDC            |       0.468 |     0.239 |
+| *AutoGeneS*      |       0.819 |     0.182 |
+| *BayesPrism*      |       0.254 |     0.295 |
+| *Bisque*         |       0.872 |     0.122 |
+| *CIBERSORTx*     |       0.648 |     0.193 |
+| *DWLS*            |       0.909 |     0.103 |
+| *MuSiC*           |       0.319 |     0.275 |
+| *Scaden*          |       0.795 |     0.150 |
+| *SCDC*            |       0.468 |     0.239 |
+| CSsingle        |       0.767 |     0.159 |
 | **HIDE-deconv v0.1.10 (1)** |   **0.926** | **0.098** |
 | **HIDE-deconv v0.1.10 (2)** |   **0.926** | **0.098** |
 | **HIDE-deconv v0.4.0 (3)** |   **0.934** | **0.094** |
@@ -46,4 +47,4 @@ Both v0.1.10 runs use the configuration of the preprint (5.000 genes, 10.000 tra
 
 Both v0.4.0 runs use the default parameters of the lazy deconvolution API (`pip install hide-deconv==0.4.0`).
 
-All HIDE-Deconv runs were evaluated independently. Results for the other methods are taken from [Dietrich et al. (2026)](https://doi.org/10.1186/s13059-026-03955-w)
+All HIDE-Deconv runs were evaluated independently. Results for the methods written in italics are taken from [Dietrich et al. (2026)](https://doi.org/10.1186/s13059-026-03955-w). CSsingle ([Shen et al (2026)](https://academic.oup.com/nar/article/54/8/gkag410/8666737)) was run using version 0.1.0.
